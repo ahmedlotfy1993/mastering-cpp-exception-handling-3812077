@@ -14,6 +14,16 @@ void threadFunction(int id)
 
 int main()
 {
+    std::set_terminate( []() -> void {
+        try{
+            std::rethrow_exception(std::current_exception());
+        }catch(const std::runtime_error& ex){
+            std::cerr << typeid(ex).name() << "\n  what(): " << ex.what() << std::endl;
+        }catch(...){
+            std::cerr << "Unknown or non-standard exception caught." << std::endl;
+        }
+        std::abort();
+    });
     const int numThreads = 4;
     std::vector<std::thread> threads;
 
